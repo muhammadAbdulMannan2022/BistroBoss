@@ -1,8 +1,10 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { Authcontext } from "../../../Providers/AuthProvider";
 
 const NavBar = () => {
   const [opacity, setOpacity] = useState(50);
+  const { user, logOut } = useContext(Authcontext);
   const navOptions = (
     <>
       <li>
@@ -14,6 +16,20 @@ const NavBar = () => {
       <li>
         <Link to="/order">Order Food</Link>
       </li>
+      {user ? (
+        <li onClick={logOut}>
+          <button>Log out</button>
+        </li>
+      ) : (
+        <>
+          <li>
+            <Link to="/login">Log in</Link>
+          </li>
+          <li>
+            <Link to="/signup">Sign up</Link>
+          </li>
+        </>
+      )}
     </>
   );
   useEffect(() => {
