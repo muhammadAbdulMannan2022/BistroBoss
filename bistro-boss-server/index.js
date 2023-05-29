@@ -7,7 +7,7 @@ const port = process.env.PORT || 5000;
 app.use(cors());
 app.use(express.json());
 // mongo DB
-const { MongoClient, ServerApiVersion } = require("mongodb");
+const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.cazjtjr.mongodb.net/?retryWrites=true&w=majority`;
 
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
@@ -43,6 +43,17 @@ async function run() {
       const data = await coruser.toArray();
       res.send(data);
     });
+    app.get("/carts/count", async (req, res) => {
+      const email = req.query.email;
+      // console.log(email);
+      if (!email) {
+        res.send([]);
+      } else {
+        const query = { userEmail: email };
+        const resault = await cartsCullection.find(query).toArray();
+        res.send(resault);
+      }
+    });
     app.get("/carts", async (req, res) => {
       const email = req.query.email;
       // console.log(email);
@@ -52,14 +63,29 @@ async function run() {
         const query = { userEmail: email };
         const resault = await cartsCullection.find(query).toArray();
         // console.log(resault);
-        res.send(resault);
+        let data = [];
+        for (const item of resault) {
+          const serchBy = { _id: item?.itemId };
+          const food = await menu.findOne(serchBy);
+          // console.log(food);
+          data.push(food);
+        }
+        // console.log(data);
+        res.send(data);
       }
     });
     app.post("/carts", async (req, res) => {
       const item = req.body;
-      console.log(item);
+      // console.log(item);
       const result = await cartsCullection.insertOne(item);
       res.send(result);
+    });
+    app.delete("/carts/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { itemId: id };
+      // console.log(id, "hitting");
+      const delted = await cartsCullection.deleteOne(query);
+      res.send(delted);
     });
   } finally {
     // Ensures that the client will close when you finish/error

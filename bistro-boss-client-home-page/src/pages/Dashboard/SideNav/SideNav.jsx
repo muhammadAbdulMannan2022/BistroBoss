@@ -6,7 +6,7 @@ import { BiMessageCheck } from "react-icons/bi";
 import { FiShoppingCart, FiCalendar } from "react-icons/fi";
 import { Link } from "react-router-dom";
 const SideNav = () => {
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(false);
   const menus = [
     { name: "dashboard", link: "/dashbord", icon: MdOutlineDashboard },
     { name: "RESERVATION", link: "/dashbord/reservation", icon: FiCalendar },
@@ -27,7 +27,7 @@ const SideNav = () => {
     <>
       <div
         className={`bg-gray-900 min-h-screen ${
-          open ? "w-72" : "w-16"
+          open ? "w-16 md:w-72" : "w-16"
         } duration-500 text-gray-100 px-4`}
       >
         <div className="py-3 flex justify-end">
@@ -58,9 +58,7 @@ const SideNav = () => {
                 {menu?.name}
               </h2>
               <h2
-                className={`${
-                  open && "hidden"
-                } absolute left-48 bg-white font-semibold whitespace-pre text-gray-900 rounded-md drop-shadow-lg px-0 py-0 w-0 overflow-hidden group-hover:px-2 group-hover:py-1 group-hover:left-14 group-hover:duration-300 group-hover:w-fit  `}
+                className={` absolute hidden left-48 bg-white font-semibold whitespace-pre text-gray-900 rounded-md drop-shadow-lg px-0 py-0 w-0 overflow-hidden group-hover:px-2 group-hover:py-1 group-hover:left-14 group-hover:duration-300 group-hover:w-fit  `}
               >
                 {menu?.name}
               </h2>
