@@ -1,10 +1,13 @@
 import { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { HiShoppingCart } from "react-icons/hi";
 import { Authcontext } from "../../../Providers/AuthProvider";
+import useCart from "../../../hooks/useCart";
 
 const NavBar = () => {
   const [opacity, setOpacity] = useState(50);
   const { user, logOut } = useContext(Authcontext);
+  const [cart] = useCart();
   const navOptions = (
     <>
       <li>
@@ -17,9 +20,18 @@ const NavBar = () => {
         <Link to="/order">Order Food</Link>
       </li>
       {user ? (
-        <li onClick={logOut}>
-          <button>Log out</button>
-        </li>
+        <>
+          <li onClick={logOut}>
+            <button>Log out</button>
+          </li>
+          <li className="w-10 h-10 rounded-full bg-white border-none outline-none">
+            <img
+              src={user?.photoURL}
+              alt={user?.displayName}
+              className="w-10 h-10 rounded-full overflow-hidden"
+            />
+          </li>
+        </>
       ) : (
         <>
           <li>
@@ -80,7 +92,15 @@ const NavBar = () => {
         <div className="navbar-center hidden lg:flex">
           <ul className="menu menu-horizontal px-1">{navOptions}</ul>
         </div>
-        <div className="navbar-end">
+        <div className="navbar-end gap-2">
+          <div className="relative">
+            <Link to="/">
+              <HiShoppingCart className="w-7 h-7" />
+              <div className="absolute h-[20px] w-[20px] flex items-center justify-center rounded-full -top-2 -right-2 bg-red-600 text-black">
+                {cart ? (cart?.length >= 100 ? `${99}+` : cart?.length) : 0}
+              </div>
+            </Link>
+          </div>
           <a className="btn">Get started</a>
         </div>
       </div>

@@ -18,12 +18,13 @@ const Signup = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     const form = e.target;
-    const { email, password, name } = form;
+    const { email, password, name, photourl } = form;
     console.log(email.value, password.value);
     createUserWithEmAndPass(email.value, password.value)
       .then((resault) => {
         updateProfile(resault.user, {
           displayName: name.value,
+          photoURL: photourl.value,
         })
           .then(() => {
             // Profile updated!
@@ -82,6 +83,17 @@ const Signup = () => {
                 type="email"
                 placeholder="email"
                 name="email"
+                className="input input-bordered"
+              />
+            </div>
+            <div className="form-control">
+              <label className="label">
+                <span className="label-text">Photo url</span>
+              </label>
+              <input
+                type="text"
+                placeholder="Photo url"
+                name="photourl"
                 className="input input-bordered"
               />
             </div>
