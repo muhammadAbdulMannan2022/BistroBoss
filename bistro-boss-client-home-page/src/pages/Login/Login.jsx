@@ -4,13 +4,14 @@ import {
   LoadCanvasTemplate,
   validateCaptcha,
 } from "react-simple-captcha";
+import { FaGoogle } from "react-icons/fa";
 import { Authcontext } from "../../Providers/AuthProvider";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 const Login = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const goTo = location?.state?.pathname || "/";
-  const { signInWithEmAndPass } = useContext(Authcontext);
+  const { signInWithEmAndPass, loginWithGoogle } = useContext(Authcontext);
   const [captcha, setCaptcha] = useState("");
   const [isValid, setIsValid] = useState(false);
   const handleSubmit = (e) => {
@@ -34,6 +35,29 @@ const Login = () => {
   useEffect(() => {
     loadCaptchaEnginge(6);
   }, []);
+  const hendleGoogleLogin = () => {
+    loginWithGoogle()
+      .then((resault) => {
+        console.log(resault.user);
+        const { displayName, email, photoURL } = resault.user;
+        const userToSave = { displayName, email, photoURL };
+        fetch("http://localhost:5000/users", {
+          method: "POST",
+          headers: {
+            "content-type": "application/json",
+          },
+          body: JSON.stringify(userToSave),
+        })
+          .then((res) => res.json())
+          .then((data) => {
+            console.log(data);
+            navigate(goTo);
+          });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
   return (
     <div className="hero min-h-screen bg-base-200">
       <div className="hero-content flex-col lg:flex-row">
@@ -97,6 +121,17 @@ const Login = () => {
               />
             </div>
           </form>
+          <div className="form-control">
+            <hr className="w-full h-[2px]" />
+            <div className="text-center mt-4">
+              <button
+                onClick={hendleGoogleLogin}
+                className="p-2 bg-gray-600 rounded-full"
+              >
+                <FaGoogle className="w-5 h-5" />
+              </button>
+            </div>
+          </div>
           <label className="label ms-10 mb-5">
             <Link to="/signup" className="label-text-alt link link-hover">
               don't have an account ? create one.

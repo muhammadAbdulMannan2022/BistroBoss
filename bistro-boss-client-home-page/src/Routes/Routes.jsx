@@ -8,6 +8,8 @@ import Signup from "../pages/Signup/Signup";
 import DashbordLayout from "../Layout/DashbordLayout";
 import Dashboard from "../pages/Dashboard/Dashboard";
 import MyCart from "../pages/Dashboard/MyCart/MyCart";
+import Private from "../private/Private";
+import Allusers from "../pages/Dashboard/AllUsers/Allusers";
 
 export const router = createBrowserRouter([
   {
@@ -30,15 +32,32 @@ export const router = createBrowserRouter([
   },
   {
     path: "/dashbord",
-    element: <DashbordLayout />,
+    element: (
+      <Private>
+        <DashbordLayout />
+      </Private>
+    ),
     children: [
       {
         path: "/dashbord/",
-        element: <Dashboard />,
+        element: (
+          <Private>
+            <Dashboard />
+          </Private>
+        ),
+      },
+
+      {
+        path: "/dashbord/manageusers",
+        element: <Allusers />,
       },
       {
         path: "/dashbord/mycart",
-        element: <MyCart />,
+        element: (
+          <Private>
+            <MyCart />
+          </Private>
+        ),
       },
     ],
   },

@@ -8,11 +8,12 @@ import { Authcontext } from "../../Providers/AuthProvider";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { updateProfile } from "firebase/auth";
 import swal from "sweetalert";
+import { FaGoogle } from "react-icons/fa";
 const Signup = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const goTo = location?.state?.pathname || "/";
-  const { createUserWithEmAndPass } = useContext(Authcontext);
+  const { createUserWithEmAndPass, loginWithGoogle } = useContext(Authcontext);
   const [captcha, setCaptcha] = useState("");
   const [isValid, setIsValid] = useState(false);
   const handleSubmit = (e) => {
@@ -29,6 +30,17 @@ const Signup = () => {
           .then(() => {
             // Profile updated!
             console.log(resault.user);
+            const { displayName, email, photoURL } = resault.user;
+            const userToSave = { displayName, email, photoURL };
+            fetch("http://localhost:5000/users", {
+              method: "POST",
+              headers: {
+                "content-type": "application/json",
+              },
+              body: JSON.stringify(userToSave),
+            })
+              .then((res) => res.json())
+              .then((data) => console.log(data));
             swal("success!", "success full signup", "success");
             navigate(goTo);
           })
@@ -37,6 +49,30 @@ const Signup = () => {
             console.log(error.massage);
           });
         // console.log(resault.user);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+  const hendleGoogleLogin = () => {
+    loginWithGoogle()
+      .then((resault) => {
+        console.log(resault.user);
+        const { displayName, email, photoURL } = resault.user;
+        const userToSave = { displayName, email, photoURL };
+        fetch("http://localhost:5000/users", {
+          method: "POST",
+          headers: {
+            "content-type": "application/json",
+          },
+          body: JSON.stringify(userToSave),
+        })
+          .then((res) => res.json())
+          .then((data) => {
+            console.log(data);
+            swal("success!", "success full signup", "success");
+            navigate(goTo);
+          });
       })
       .catch((err) => {
         console.log(err);
@@ -131,6 +167,17 @@ const Signup = () => {
               />
             </div>
           </form>
+          <div className="form-control">
+            <hr className="w-full h-[2px]" />
+            <div className="text-center mt-4">
+              <button
+                onClick={hendleGoogleLogin}
+                className="p-2 bg-gray-600 rounded-full"
+              >
+                <FaGoogle className="w-5 h-5" />
+              </button>
+            </div>
+          </div>
           <label className="label ms-10 mb-5">
             <Link to="/login" className="label-text-alt link link-hover">
               alrady have an account ? Login.

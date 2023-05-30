@@ -1,12 +1,9 @@
-import useCartItems from "../../../hooks/useCartItems";
-import { Helmet } from "react-helmet-async";
 import { FaTrash } from "react-icons/fa";
-import { Link } from "react-router-dom";
+import useUsers from "../../../hooks/useUsers";
 import Swal from "sweetalert2";
 
-const MyCart = () => {
-  const [cartItems, isLoading, refetch] = useCartItems();
-  const total = cartItems.reduce((sum, item) => item.price + sum, 0);
+const Allusers = () => {
+  const [users, loading, refetch] = useUsers();
   const handleDelete = (id) => {
     fetch(`http://localhost:5000/carts/${id}`, {
       method: "DELETE",
@@ -24,19 +21,12 @@ const MyCart = () => {
       });
   };
   return (
-    <div className="text-xl text-gray-900 font-semibold w-full">
-      {console.log(isLoading)}
-      <Helmet>
-        <title>Bistro Boss || My cart</title>
-      </Helmet>
-      <h1 className="text-white font-bold mb-10 mt-5">Hi, Welcome Back!</h1>
-
+    <div>
+      {console.log(users)}
       <div className="pt-10 pe-5 md:pe-10 text-white">
         <div className="bg-gray-700 py-4 px-2 rounded">
           <div className="title uppercase gap-3 justify-between rounded flex">
-            <h1 className="text-xl">total orders : {cartItems.length}</h1>
-            <h1 className="text-xl">Total Price : ${total.toFixed(2)}</h1>
-            <Link className="btn btn-warning btn-sm">buy</Link>
+            <h1 className="text-xl">total users : {users.length}</h1>
           </div>
           <div>
             <table className="min-w-full  divide-y mt-5 rounded divide-gray-200">
@@ -64,7 +54,7 @@ const MyCart = () => {
                     scope="col"
                     className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider"
                   >
-                    Price
+                    Roll
                   </th>
                   <th
                     scope="col"
@@ -74,7 +64,7 @@ const MyCart = () => {
                   </th>
                 </tr>
               </thead>
-              {isLoading ? (
+              {loading ? (
                 <tbody className="flex min-w-full items-center justify-center py-10">
                   <tr
                     className="radial-progress motion-safe:animate-spin"
@@ -87,22 +77,24 @@ const MyCart = () => {
                 </tbody>
               ) : (
                 <tbody className="divide-y divide-gray-500">
-                  {cartItems.map((cartItem, i) => (
+                  {users.map((cartItem, i) => (
                     <tr key={i}>
                       <td className="px-6 py-4 whitespace-nowrap">{i}</td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <img
-                          src={cartItem?.image}
-                          alt={cartItem?.name}
+                          src={cartItem?.photoURL}
+                          alt={cartItem?.displayName}
                           className="w-16 h-16 object-cover"
                         />
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
-                        {cartItem?.name}
+                        <span>{cartItem?.displayName}</span>
+                        <br />
+                        <span className="text-xs text-gray-400">
+                          {cartItem?.email}
+                        </span>
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        ${cartItem?.price}
-                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">user</td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <button
                           onClick={() => handleDelete(cartItem._id)}
@@ -123,4 +115,4 @@ const MyCart = () => {
   );
 };
 
-export default MyCart;
+export default Allusers;

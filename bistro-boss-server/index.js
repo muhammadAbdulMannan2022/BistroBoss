@@ -27,6 +27,24 @@ async function run() {
     const menu = database.collection("menu");
     const reviews = database.collection("reviews");
     const cartsCullection = database.collection("carts");
+    const usersCullection = database.collection("users");
+    // users api
+    app.post("/users", async (req, res) => {
+      const user = req.body;
+      const query = { email: user.email };
+      const existingUser = await usersCullection.findOne(query);
+      if (existingUser) {
+        return res.send({ message: "user already exists" });
+      }
+      const resault = await usersCullection.insertOne(user);
+      res.send(resault);
+    });
+    app.get("/users", async (req, res) => {
+      const resault = await usersCullection.find().toArray();
+      // console.log(resault);
+      res.send(resault);
+    });
+    //
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
     console.log(
