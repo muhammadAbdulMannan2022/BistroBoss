@@ -58,8 +58,8 @@ const Signup = () => {
     loginWithGoogle()
       .then((resault) => {
         console.log(resault.user);
-        const { displayName, email, photoURL } = resault.user;
-        const userToSave = { displayName, email, photoURL };
+        const { displayName, email, photoURL, uid } = resault.user;
+        const userToSave = { displayName, email, photoURL, uid };
         fetch("http://localhost:5000/users", {
           method: "POST",
           headers: {
