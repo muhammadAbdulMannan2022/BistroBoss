@@ -125,5 +125,3 @@ app.get("/", (req, res) => {
 app.listen(port, () => {
   console.log(`boos is wtaching on port ${port}`);
 });
-// Es4vYyfkbAJZeVrE
-// bistroBos
